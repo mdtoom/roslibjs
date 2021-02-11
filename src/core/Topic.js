@@ -22,6 +22,7 @@ var Message = require('./Message');
  *   * throttle_rate - the rate (in ms in between messages) at which to throttle the topics
  *   * queue_size - the queue created at bridge side for re-publishing webtopics (defaults to 100)
  *   * latch - latch the topic when publishing
+ *   * sensor_qos - sensor_qos subscribe or publish with sensor qos
  *   * queue_length - the queue length at bridge side used when subscribing (defaults to 0, no queueing).
  *   * reconnect_on_close - the flag to enable resubscription and readvertisement on close event(defaults to true).
  */
@@ -34,6 +35,7 @@ function Topic(options) {
   this.compression = options.compression || 'none';
   this.throttle_rate = options.throttle_rate || 0;
   this.latch = options.latch || false;
+  this.sensor_qos = options.sensor_qos || false;
   this.queue_size = options.queue_size || 100;
   this.queue_length = options.queue_length || 0;
   this.reconnect_on_close = options.reconnect_on_close !== undefined ? options.reconnect_on_close : true;
@@ -105,7 +107,8 @@ Topic.prototype.subscribe = function(callback) {
     compression: this.compression,
     throttle_rate: this.throttle_rate,
     queue_length: this.queue_length,
-    latch: this.latch
+    latch: this.latch,
+    sensor_qos: this.sensor_qos
   });
 };
 
@@ -154,6 +157,7 @@ Topic.prototype.advertise = function() {
     type: this.messageType,
     topic: this.name,
     latch: this.latch,
+    sensor_qos: this.sensor_qos,
     queue_size: this.queue_size
   });
   this.isAdvertised = true;
@@ -201,7 +205,8 @@ Topic.prototype.publish = function(message) {
     id: 'publish:' + this.name + ':' + this.ros.idCounter,
     topic: this.name,
     msg: message,
-    latch: this.latch
+    latch: this.latch,
+    sensor_qos: this.sensor_qos
   };
   this.ros.callOnConnection(call);
 };
