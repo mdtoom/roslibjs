@@ -104,7 +104,8 @@ Topic.prototype.subscribe = function(callback) {
     topic: this.name,
     compression: this.compression,
     throttle_rate: this.throttle_rate,
-    queue_length: this.queue_length
+    queue_length: this.queue_length,
+    latch: this.latch
   });
 };
 

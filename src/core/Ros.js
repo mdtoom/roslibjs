@@ -636,6 +636,7 @@ Ros.prototype.decodeTypeDefs = function(defs) {
         if (sub) {
           var subResult = decodeTypeDefsRec(sub, hints);
           if (arrayLen === -1) {
+            // comment
           }
           else {
             typeDefDict[fieldName] = [subResult];

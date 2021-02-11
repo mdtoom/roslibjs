@@ -1207,6 +1207,8 @@ function toObject(val) {
 	return Object(val);
 }
 
+
+a
 function shouldUseNative() {
 	try {
 		if (!Object.assign) {

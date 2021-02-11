@@ -51,7 +51,6 @@ function TFClient(options) {
   this.currentTopic = false;
   this.frameInfos = {};
   this.republisherUpdateRequested = false;
-  this._subscribeCB = null;
 
   // Create an Action client
   this.actionClient = new ActionClient({
@@ -147,7 +146,7 @@ TFClient.prototype.processResponse = function(response) {
   // if we subscribed to a topic before, unsubscribe so
   // the republisher stops publishing it
   if (this.currentTopic) {
-    this.currentTopic.unsubscribe(this._subscribeCB);
+    this.currentTopic.unsubscribe();
   }
 
   this.currentTopic = new Topic({
@@ -155,8 +154,7 @@ TFClient.prototype.processResponse = function(response) {
     name: response.topic_name,
     messageType: 'tf2_web_republisher/TFArray'
   });
-  this._subscribeCB = this.processTFArray.bind(this);
-  this.currentTopic.subscribe(this._subscribeCB);
+  this.currentTopic.subscribe(this.processTFArray.bind(this));
 };
 
 /**
@@ -218,7 +216,7 @@ TFClient.prototype.unsubscribe = function(frameID, callback) {
 TFClient.prototype.dispose = function() {
   this.actionClient.dispose();
   if (this.currentTopic) {
-    this.currentTopic.unsubscribe(this._subscribeCB);
+    this.currentTopic.unsubscribe();
   }
 };
 
